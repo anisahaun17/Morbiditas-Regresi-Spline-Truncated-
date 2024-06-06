@@ -1,0 +1,104 @@
+---
+title: "UAS"
+author: "M Zidane Ramadhan"
+date: "2023-12-18"
+output: html_document
+---
+
+```{r}
+setwd("C:/Users/ACER/Downloads/MURYOKUSHO/Kuliah/Semester 5/Regresi Nonparametrik/UAS")
+
+
+df <- read.csv("morbidity new.csv")
+df
+
+y = df$Angka.Morbidity
+x1 = df$KP
+x2 = df$PPM
+x3 = df$RLS
+x4 = df$UMK
+x5 = df$sanitasi
+x6 = df$PHBS
+
+
+```
+
+```{r}
+var(df)
+```
+```{r}
+selected_cols <- df[, c("KP", "PPM", "RLS", "UMK", "sanitasi")]
+selected_cols
+```
+
+```{r}
+# Membuat scatter
+
+# par(mfrow=c(2,3))
+
+plot(x1, y, xlab="Kepadatan penduduk", ylab="Angka.Morbidity", pch=16, col= "red")
+
+plot(x2, y, xlab="PPM", ylab="Angka.Morbidity", pch=16, col ="red")
+
+plot(x3, y, xlab="RLS", ylab="Angka.Morbidity", pch=16, col ="red")
+
+plot(x4, y, xlab="UMK", ylab="Angka.Morbidity", pch=16, col ="red")
+
+plot(x5, y, xlab="sanitasi", ylab="Angka.Morbidity", pch=16, col ="red")
+
+plot(x6, y, xlab="PHBS", ylab="Angka.Morbidity", pch=16, col ="red")
+
+```
+
+```{r}
+x=df[,-c(1,1)]
+x
+```
+
+Ini menggunakan 5 variabel X setelah X6 dihapus
+```{r}
+source('C:/Users/ACER/Downloads/MURYOKUSHO/Kuliah/Semester 5/Regresi Nonparametrik/Kuis 2/splinetruncated.R')
+x=selected_cols
+y=df$Angka.Morbidity
+model=spline.truncated.linier.multivariabel(x,y,b=50,taraf.alpha = 0.05)
+```
+Menggunakan 6 variabel X
+```{r}
+library(mgcv)
+library(splines)
+
+
+knots_list <- list(X1 = c(0.4285714, 0.8979592), X2 = c(0.4285714, 0.8979592), X3 = c(0.4285714, 0.8979592), X4 = c(0.2040816, 0.4081633, 0.877551), X5 = c(0.4285714, 0.8979592), X6 = c(0.4285714, 0.8979592))
+
+model_spline_kom <- gam(y ~ bs(x1, knots = knots_list$X1, degree = 1) +
+                        bs(x2, knots = knots_list$X2, degree = 1) +
+                        bs(x3, knots = knots_list$X3, degree = 1) +
+                        bs(x4, knots = knots_list$X4, degree = 1) +
+                        bs(x5, knots = knots_list$X5, degree = 1) +
+                        bs(x6, knots = knots_list$X6, degree = 1))
+    
+
+summary(model_spline_kom)
+```
+
+Menggunakan 5 variabel X setelah X6 dihapus
+```{r}
+library(mgcv)
+library(splines)
+
+
+knots_list <- list(X1 = c(0.06122449, 0.2857143, 0.4693878), X2 = c(0.06122449, 0.2857143, 0.4693878), X3 = c(0.06122449, 0.2857143, 0.4693878), X4 = c(0.2040816, 0.6326531), X5 = c(0.06122449, 0.2857143, 0.4693878))
+
+model_spline_kom_fix <- gam(y ~ bs(x1, knots = knots_list$X1, degree = 1) +
+                        bs(x2, knots = knots_list$X2, degree = 1) +
+                        bs(x3, knots = knots_list$X3, degree = 1) +
+                        bs(x4, knots = knots_list$X4, degree = 1) +
+                        bs(x5, knots = knots_list$X5, degree = 1))
+    
+
+summary(model_spline_kom_fix)
+```
+```{r}
+
+```
+
